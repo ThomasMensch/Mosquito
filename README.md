@@ -64,3 +64,6 @@ You are provided the following set of information on a (`year`, `weekofyear`) ti
  - `ndvi_nw` – Pixel northwest of city centroid
 
 
+## Pré-traitement
+
+

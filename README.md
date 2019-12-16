@@ -64,6 +64,16 @@ You are provided the following set of information on a (`year`, `weekofyear`) ti
  - `ndvi_nw` – Pixel northwest of city centroid
 
 
-## Pré-traitement
+## Pré-traitement (fichier 01)
 
+Nous avons effectué sur les données chargées :
+- recast de certaines colonnes de chaines de caractères en float, int, date
+- suppression des colonnes redondantes
+- remplissage des données manquantes par celles immédiatement précédentes
+- unification des unités de température
+- seuillage de la densité de végétation (nvdi)
+- ajout de nouvelles features : prise en compte des valeurs des 4 semaines précédentes (conditions favorables au développement des moustiques)
 
+Pour décider de la relevance des features, nous avons utilisé le calcul de corrélation de la librairie stat de spark et converti la matrice résultante pour l'afficher via seaborn (fichier 03)
+
+## Modèle

@@ -42,7 +42,7 @@ Description des données :
 
 *Villes et dates*
 
- - `city` – abbreviations des villes : `sj` pour San Juan et `iq` pour Iquitos
+ - `city` – abbréviations des villes : `sj` pour San Juan et `iq` pour Iquitos
  - `week_start_date` – Date données au format yyyy-mm-dd
 
 *Les mesures quotidiennes de la station météorologique GHCN de la NOAA*
@@ -65,8 +65,8 @@ Description des données :
  - `reanalysis_relative_humidity_percent` – Humidité relative moyenne
  - `reanalysis_specific_humidity_g_per_kg` – Humidité spécifique moyenne
  - `reanalysis_precip_amt_kg_per_m2` – précipitations totale
- - `reanalysis_max_air_temp_k` – temperature de l'air maximum
- - `reanalysis_min_air_temp_k` – temperature de l'air minimum
+ - `reanalysis_max_air_temp_k` – température de l'air maximum
+ - `reanalysis_min_air_temp_k` – température de l'air minimum
  - `reanalysis_avg_temp_k` – température moyenne de l'air
  - `reanalysis_tdtr_k` – Plage des températures diurnes
 
@@ -98,6 +98,10 @@ Pour le test, nous avons gardé la dernière année de relevé de données.
 
 La régression linéaire, après une cross-validation, donnait un MAE de `11.860`. Quant au random forest, le MAE était de `5.601`.
 Le premier graphique représente les prédictions obtenues avec le random forest, le second celles obtenues avec la régression linéaire. 
+
+Nous avons constaté que la bibliothèque ML de Spark n'était pas particulièrement adaptée au traitement de séries temporelles.
+En effet dans ce cas, les étapes de construction des jeux de données d'entrainement et de test doivent préserver la continuité temporelle des données.
+Nous avons donc implémenté nos propres *"split"* et *"grid search"*.
 
 ## Cross Correlation (fichier 03)
 

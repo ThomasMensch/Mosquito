@@ -24,11 +24,12 @@ En effet dans ce projet, il s'agit d'étudier des séries temporelles et nous av
 
 La performance de nos modèles est évaluée en fonction de la MAE (*Mean Absolute Error*) obtenue sur le jeu de données *test* fourni par le challenge *"DengueAI"*.
 
-Pour ce projet, nous avons réalisé 3 notebooks :
- 1. un pré-traitement des données,
- 2. un pipeline avec 2 modèles distincts
- 3. et enfin un dédié aux "cross-correlations".
- 
+Pour ce projet, nous avons réalisé plusieurs *notebooks*, organisés de la manière suivante :
+ 1. préparation des données
+ 2. construction d'un premier modèle de prédiction
+ 3. analyse et exploration des données
+ 4.
+
 **Résultats obtenus** - Pour autant, nous avons obtenu des résultats honorables sur *DengueAI*.
 
 
@@ -118,7 +119,7 @@ Les données pre-traitées sont sauvegardées en format `parquet` sur disque.
 D'autre part, nous chargeons le jeu de données de test (i.e., sans label correspondant), fournies par le "Challenge *DengueAI*", sur lequel nous appliquons les mêmes transformations et que nous sauvegardons aussi au format `parquet'.
 
 
-### Construction d'un premier modèle (`12-SD701_Dengue_FirstModel.ipynb`)
+### Construction d'un premier modèle de prédiction (`12-SD701_Dengue_FirstModel.ipynb`)
 
 Dans ce *notebook*, nous construisons un modèle prédictif avec l'ensemble des variables en utilisant un algorithme de *Random Forest*.
 
@@ -128,34 +129,36 @@ Nous construisons le jeu de données *test* (10 % des données), pour chaque vil
 
 **_Pipeline_** - Ensuite nous construisons un *pipeline* afin de transformer les données dans une forme utilisable par l'algorithme de forêt aléatoire. Les transformations consistent en un *HotEncoder* pour les variable de type *string* (`city`) et en une normalisation des données.
 
-**_Random forest_** - L'algorithme de *random forest*, utilisant les paramètres par défaut (`maxDepth=5` et `numTrees=20`), donne une MAE de `13.611`.
+**_Random forest_** - L'algorithme de *random forest*, utilisant les paramètres par défaut (`maxDepth=5` et `numTrees=20`), donne une MAE de `14.610`.
+ATTENTION les résultats varient d'une expérience à l'autre, le valeur de MAE est indicative.
+
+**Ajustement des hyper-paramètres** (*grid search*) - là encore, nous ne pouvons pas utiliser les outils disponibles dans *Spark* du fait du caractère temporel des données.
+Nous avons donc implémenté notre propre *grid search* pour deux hyper-paramètres des forêts aléatoires: le nombre d'arbres constituant la forêt et la profondeur maximum de chaque arbre.
+Nous sommes conscients de l'aspect "simpliste" de notre mise en oeuvre de la *grid search*.
+Après *grid search*, nous obtenons une MAE de `12.873`.
+
+**Visualisation** - La visualisation des predictions su le jeu d'entrainement) montre que le modèle peine à retrouver la complexité de la série temporelle. Nous remarquons toutefois que visuellement le modèle retrouve la périodicité 
+
+![](figs/02-fig_02.jpg)
 
 
-TO BE CONTINUED ...
+### Analyse et exploration des données (`13-SD701_Dengue_CrossCorrelation.ipynb`)
 
-Nous avons décidé de tester deux modèles différents : un modèle de régression linéaire et un modèle de random forest.
+Ce notebook nous permet d'identifier les variables (*features*) les plus pertinentes pour améliorer notre modèle précédent, à l'aide de l'analyse des matrices de corrélation.
 
-
-La régression linéaire, après une cross-validation, donnait un MAE de `11.860`.
-Quant au random forest, le MAE était de `5.601`.
-Le premier graphique représente les prédictions obtenues avec le random forest, le second celles obtenues avec la régression linéaire.
-
-Nous avons constaté que la bibliothèque ML de Spark n'était pas particulièrement adaptée au traitement de séries temporelles.
-En effet dans ce cas, les étapes de construction des jeux de données d'entrainement et de test doivent préserver la continuité temporelle des données.
-Nous avons donc implémenté nos propres *"split"* et *"grid search"*.
+Notamment les différences notables entre les matrices de corrélation de chaque ville suggère de  construire un modèle de prédiction séparé pour chaque ville.
 
 
-### Cross correlation (fichier 03)
+### *Feature engineering*  (`14-SD701_Dengue_FeatureEngineering-1.ipynb` et `15-SD701_Dengue_FeatureEngineering-2.ipynb`)
 
-Ce notebook nous a permis d'identifier quelles étaient les *features* les plus pertinentes pour construire nos modèles présentés précédemment.
+Dans ces 2 notebooks, nous essayons d'améliorer le modèle en travaillant sur certaines variables.
+Tout d'abord, sur les variables liées à la végétation (*ndvi*):
 
+ - seuillage de la densité de végétation. Comparativement au paludisme, la dengue est davantage présente dans les villes alors que le paludisme est plutôt en zone rurale. A travers ce seuillage, nous avons cherché à mettre en évidence ce facteur.
+ - moyennage de la densité de végétation.
+ 
+ - ajout de nouvelles features : prise en compte des valeurs des semaines précédentes. En faisant du benchmarking et en s'appuyant sur le cycle habituel de vie du moustique et des périodes d'incubation, nous nous sommes rendus compte qu'un pas de 3 semaines était le plus efficace.
 
-### *Feature engineering* 
-
-- seuillage de la densité de végétation (*nvdi*). Comparativement au paludisme, la dengue est davantage présente dans les villes alors que le paludisme est plutôt en zone rurale. A travers ce seuillage, nous avons cherché à mettre en évidence ce facteur.
-- ajout de nouvelles features : prise en compte des valeurs des 4 semaines précédentes. Seules les features les plus pertinentes (températures moyennes et différents relevés de niveau de précipitation). En faisant du benchmarking et en s'appuyant sur le cycle habituel de vie du moustique et des périodes d'incubation, nous nous sommes rendus compte qu'un pas de 4 semaines était le plus efficace.
-
-Pour décider de la pertinence des features, nous avons utilisé le calcul de corrélation de la librairie stat de spark et converti la matrice résultante pour l'afficher via seaborn (fichier 03)
 
 
 
@@ -165,7 +168,7 @@ Les résultats obtenus sont des résultats honorables sur *DengueAI*.
 
 La principale difficulté rencontrée réside dans l'utilisation de *Spark* pour le traitement des séries temporelles.
 
-D'autre part, 
+Nous avons donc dû implémenter nos propres fonctions de *"split"* et de *"grid search"*.
 
-A noter que les relevés sont hebdomadaires, des relevés quotidiens aurait peut-être permis une meilleure précision par la suite.
+Nous avons considéré 1 modèle de prédiction unique pour les deux villes, avec comme objectif d'obtenir un modèle "universel". Sans doute qu'un modèle ajusté/dédié pour chaque ville serait certainement plus performant.
 

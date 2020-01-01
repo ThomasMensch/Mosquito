@@ -159,8 +159,13 @@ Tout d'abord, sur les variables liées à la végétation (*ndvi*):
  
  - ajout de nouvelles features : prise en compte des valeurs des semaines précédentes. En faisant du benchmarking et en s'appuyant sur le cycle habituel de vie du moustique et des périodes d'incubation, nous nous sommes rendus compte qu'un pas de 3 semaines était le plus efficace.
 
-
-
+```
+shift=0, Best model (numTree=50, MaxDepth=3) => MAE = 12.797
+shift=1,
+shift=2, Best model (numTree=55, MaxDepth=3) => MAE = 12.486
+shift=3, Best model (numTree=50, MaxDepth=4) => MAE = 12.465
+shift=4, Best model (numTree=30, MaxDepth=3) => MAE = 12.544
+```
 
 ## Conclusion
 

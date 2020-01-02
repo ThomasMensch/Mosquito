@@ -28,9 +28,9 @@ Pour ce projet, nous avons réalisé plusieurs *notebooks*, organisés de la man
  1. préparation des données
  2. construction d'un premier modèle de prédiction
  3. analyse et exploration des données
- 4.
+ 4. amélioration du modèle par *"feature engineering"*
 
-**Résultats obtenus** - Pour autant, nous avons obtenu des résultats honorables sur *DengueAI*.
+**Résultats obtenus** - Nous avons obtenu des résultats honorables sur *DengueAI* avec un MAE de 12,465.
 
 
 ## Description des données

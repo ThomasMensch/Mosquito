@@ -29,8 +29,9 @@ Pour ce projet, nous avons réalisé plusieurs *notebooks*, organisés de la man
  2. construction d'un premier modèle de prédiction
  3. analyse et exploration des données
  4. amélioration du modèle par *"feature engineering"*
+ 5. amélioration de la cross validation pour les time-series par fenêtre glissante des K-folds.
 
-**Résultats obtenus** - Nous avons obtenu des résultats honorables sur *DengueAI* avec un MAE de 12,465.
+**Résultats obtenus** - Nous avons obtenu des résultats honorables sur *DengueAI* en arrivant dans le **TOP 20%** des 7983 contributeurs avec un MAE de 26.1755.
 
 
 ## Description des données
@@ -166,6 +167,20 @@ shift=2, Best model (numTree=55, MaxDepth=3) => MAE = 12.486
 shift=3, Best model (numTree=50, MaxDepth=4) => MAE = 12.465
 shift=4, Best model (numTree=30, MaxDepth=3) => MAE = 12.544
 ```
+
+### *Custom Cross Validation* par fenêtres glissantes des K-folds (`16-SD701_Dengue_CustomCrossVal.ipynb`)
+
+Après avoir amélioré les variables les plus pertinentes dans les notebook précédents, nous nous sommes attachés à améliorer le processus de cross validation. En effet, classiquement ce dernier s'effectue en créant des K folds de manière aléatoire sans se préoccuper du côté temporel des échantillons créés. Après avoir effectué du benchmarking sur ce point précis et faute de librairies dédiées dans Spark, nous nous sommes inspirés du code fourni sur le site https://www.timlrx.com/2018/04/08/creating-a-custom-cross-validation-function-in-pyspark/ pour prendre en compte le côté temporel des données et renforcer l'apprentissage du modèle à travers les ans.
+
+ Pour cela, nous avons créé la class CustomCrossValidator en créant par exemple pour San Juan (où nous avons des données de 1990 à 2008) des K fold comme suit, avec des pas de 3 ans :
+- train 1990-1993 test 1993-1996
+- train 1990-1996 test 1996-1999
+- train 1990-1999 test 1999-2002
+- train 1990-2002 test 2002-2005
+- train 1990-2005 test 2005-2008
+
+Puis nous lançons notre modèle de Random Forest avec une cross validation sur ces K fold et obtenons encore de meilleurs résultats que précédemment.
+
 
 ## Conclusion
 

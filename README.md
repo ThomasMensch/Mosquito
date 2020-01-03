@@ -167,6 +167,9 @@ shift=3, Best model (numTree=50, MaxDepth=4) => MAE = 12.465
 shift=4, Best model (numTree=30, MaxDepth=3) => MAE = 12.544
 ```
 
+Au vue de ces résultats, l'application d'un décalage de 3 semaines sur les données semblent améliorer légèrement les prédictions. Nous retenons donc ce décalage pour la suite.
+
+
 ### *Custom Cross Validation* par fenêtres glissantes des K-folds (`16-SD701_Dengue_CustomCrossVal.ipynb`)
 
 Après avoir amélioré les variables les plus pertinentes dans les notebook précédents, nous nous sommes attachés à améliorer le processus de *cross validation*.
@@ -184,11 +187,13 @@ Puis nous lançons notre modèle de *Random Forest* avec une *cross validation* 
 
 ## Conclusion
 
-Les résultats obtenus sont des résultats honorables sur *DengueAI*.
+Dans ce projet, nous avons construit un modèle de forêt aléatoire (*random forest*) pour prédire les épidémies de Dengue en fonction de facteurs environnmentaux. 
+Nous avons utilisé *Spark* et les *DataFrame*.
+Nous avons, avec un succés relatif, manipulé/transformé les variables afin d'améliorer les performances du modèle; beaucoup d'efforts pour des améliorations minimes.
+Toutefois les résultats obtenus  sur *DengueAI* sont honorables, nous figurons dans le 1/5 supérieur des participants au *challenge*.
 
-La principale difficulté rencontrée réside dans l'utilisation de *Spark* pour le traitement des séries temporelles.
+La principale difficulté rencontrée réside dans l'utilisation de *Spark* pour le traitement des séries temporelles; les bibliothèques de base de *Spark* ne disposant pas des algorithmes pour analyser et traiter ce type de données. 
+Par exemple, un algorithme de type *LSTM* aurait certainement était plus adapté à notre problème.
+Nous avons donc dû implémenter nos propres fonctions de *"split"*, *"grid search"* et *"cross validation"* afin de traiter proprement les données.
 
-Nous avons donc dû implémenter nos propres fonctions de *"split"* et de *"grid search"*.
-
-Nous avons considéré 1 modèle de prédiction unique pour les deux villes, avec comme objectif d'obtenir un modèle "universel". Sans doute qu'un modèle ajusté/dédié pour chaque ville serait certainement plus performant.
-
+Notons aussi que nous avons considéré un modèle de prédiction unique pour les deux villes, avec comme objectif d'obtenir un modèle "universel". Sans doute qu'un modèle ajusté/dédié pour chaque ville serait certainement plus performant car les données de chaque ville sont très différentes.

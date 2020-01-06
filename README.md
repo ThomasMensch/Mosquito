@@ -2,6 +2,8 @@
 
 *Hélène Danlos, Chloé Younes, Nicolas Louis, Thomas Mensch*
 
+[Projet sur Github](https://github.com/ThomasMensch/Mosquito)
+
 
 ## Introduction
 
@@ -64,7 +66,7 @@ Les variables explicatives sont de différentes natures: géographiques, tempore
  - `station_avg_temp_c` – température Moyenne (en degré *Celsius*)
  - `station_precip_mm` – total des précipitations (en *mm*)
  - `station_diur_temp_rng_c` – plage de températures diurnes (en degré *Celsius*)
- 
+
 *PERSIANN satellite precipitation measurements (Echelle de 0.25 x 0.25 degrés)*
 
  - `precipitation_amt_mm` – total des précipitations (en *mm*)
@@ -157,7 +159,7 @@ Tout d'abord, sur les variables liées à la végétation (*ndvi*):
 
  - seuillage de la densité de végétation. Comparativement au paludisme, la dengue est davantage présente dans les villes alors que le paludisme est plutôt en zone rurale. A travers ce seuillage, nous avons cherché à mettre en évidence ce facteur.
  - moyennage de la densité de végétation.
- 
+
  - ajout de nouvelles features : prise en compte des valeurs des semaines précédentes. En faisant du benchmarking et en s'appuyant sur le cycle habituel de vie du moustique et des périodes d'incubation, nous nous sommes rendus compte qu'un pas de 3 semaines était le plus efficace.
 
 ```
